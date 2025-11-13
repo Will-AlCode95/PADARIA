@@ -1,0 +1,47 @@
+-- CRIAÇÃO DO BANCO DE DADOS
+
+CREATE DATABASE padaria;
+
+USE padaria;
+
+CREATE TABLE produtos(
+  idprodutos INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(50) NOT NULL,
+  valor DECIMAL,
+  quantidade INT
+ );
+
+CREATE TABLE login(
+  idlogin INT PRIMARY KEY AUTO_INCREMENT,         
+  login VARCHAR(50) NOT NULL, 
+  senha VARCHAR(255) NOT NULL
+);
+
+
+INSERT INTO login (idlogin, login, senha)
+VALUES (null, 'admin', SHA2('123', 256) );
+
+CREATE TABLE perfil(
+   idperfil INT AUTO_INCREMENT PRIMARY KEY,
+   nomeperfil VARCHAR(15) NOT NULL
+);
+
+INSERT INTO perfil VALUES 
+  (null, 'admin'),
+  (null, 'usuario');
+
+-- adicionando a coluna 'perfil' na tabel login
+ALTER TABLE login ADD COLUMN perfil INT;
+
+-- Adicionando a chave estrangeira(FOREIGN KEY) e incluir a cláusula ON DELETE CASCADE.
+-- Isso significa que se um registro em 'perfil' for deletado, todos os registros em 'login'
+que fazem referencia a ele também serão automaticamente deletados.
+
+ALTER TABLE login
+ADD FOREIGN KEY(perfil)
+REFERENCES perfil(idperfil)
+ON DELETE CASCADE;
+
+
+--Atualiza o registro de login para ter o perfil 'admin' (idperfil = 1)
+UPDATE login SET perfil = 1;
